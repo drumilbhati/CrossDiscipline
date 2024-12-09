@@ -1,0 +1,19 @@
+{
+	"name": "epsilon",
+	"private": true,
+	"version": "0.0.0",
+	"packageManager": "pnpm@8.15.1",
+	"devDependencies": {
+		"turbo": "^2.0.9"
+	},
+	"scripts": {
+		"start": "turbo start",
+		"build": "turbo build",
+		"dev": "turbo dev"
+	},
+	"dependencies": {
+		"js-cookies": "^1.0.4",
+		"pnpm": "^9.6.0",
+		"react-router-dom": "^6.25.1"
+	}
+}
