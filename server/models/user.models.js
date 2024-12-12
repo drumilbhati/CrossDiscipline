@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     role: {
+        // role defines the user as a student or a faculty
         type: String,
         default: 'user'
     },
@@ -47,4 +48,8 @@ const userSchema = new mongoose.Schema({
         default: []
     },
     projects: [{ type: mongoose.Types.ObjectId, ref: 'project' }],
+
 }, { timestamps: true });
+
+const User = mongoose.model('user', userSchema);
+export default User;
