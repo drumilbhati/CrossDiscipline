@@ -1,12 +1,12 @@
 import Project from '../models/projects.models.js';
 import User from '../models/user.models.js';
-import jwt from 'jsonwebtoken';
+import jwt, { decode } from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export const createProject = async (req, res) => {
     try {
-        const { title, description, members, domains, contact, deadline, status, user } = req.body;
+        const { title, description, owner, members, domains, contact, deadline, status, user } = req.body;
 
         let project = await Project.findOne({ title });
         if (project) {
@@ -16,6 +16,7 @@ export const createProject = async (req, res) => {
         project = new Project({
             title,
             description,
+            owner,
             members,
             domains,
             contact,
@@ -51,10 +52,10 @@ export const joinProject = async(req, res) => {
     const project = await Project.findOne({ title: project_title });
 
     if (!user) {
-        return res.status(400).json({ message: 'User not found' });
+        return res.status(404).json({ message: 'User not found' });
     }
     if (!project) {
-        return res.status(400).json({ message: 'Project not found' });
+        return res.status(404).json({ message: 'Project not found' });
     }
     if (project.status !== 'Open') {
         return res.status(400).json({
@@ -75,4 +76,29 @@ export const joinProject = async(req, res) => {
         message: 'Successfully joined project',
         project: project
     });
+};
+
+export const deleteProject = async(req, res) => {
+    try {
+        const { token, projectId } = req.body;
+        const decodedToken = jwt.verify(token, JWT_SECRET);
+        const user = await User.findById(decodedToken.userId).select('-password');
+        const project = await Project.findById(projectId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+        if (project.owner !== user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        await Project.deleteOne({ _id: projectId });
+        res.status(200).json({ message: 'Project deleted successfully' });
+        
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
 };

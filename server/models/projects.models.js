@@ -10,6 +10,10 @@ const projectSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    owner: {
+        type: mongoose.Types.ObjectId, ref: 'user',
+        required: true
+    },
     members: [{type: mongoose.Types.ObjectId, ref: 'user'}],
     domains: {
         type: Array,
