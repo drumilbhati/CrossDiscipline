@@ -33,9 +33,24 @@ mongoose.connect(process.env.MONGO_URI)
 
 io.on('connection', (socket) => {
     console.log('A user connected', socket.id);
-    socket.on('chat message', (message) => {
-        io.emit('chat message', message);
+    
+    socket.on('join room', (room) => {
+        socket.rooms.forEach(r => {
+            if (r !== socket.id) socket.leave(r);
+        });
+        socket.join(room);
+        console.log(`User ${socket.id} joined room ${room}`);
     });
+    
+    socket.on('chat message', ( {room, message} ) => {
+        if (socket.rooms.has(room)) {
+            io.to(room).emit('chat message', {
+                message, 
+                sender: socket.id
+            });
+            console.log(`Message to ${room}: ${message}`);
+        }
+    })
 });
 
 server.listen(port, () => {
