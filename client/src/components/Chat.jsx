@@ -26,7 +26,12 @@ const Chat = () => {
     };
 
     return (
-        <div>
+        <div id="chat-container">
+            <ul id="messages">
+                {messages.map((message, index) => (
+                    <li key={index}>{message}</li>
+                ))}
+            </ul>
             <form onSubmit={handleSubmit}>
             <input
                 value={input}
@@ -34,11 +39,6 @@ const Chat = () => {
                 autoComplete="off"/>
             <button type="submit">Send</button>
             </form>
-            <ul>
-                {messages.map((message, index) => (
-                    <li key={index}>{message}</li>
-                ))}
-            </ul>
         </div>
     );
 };
