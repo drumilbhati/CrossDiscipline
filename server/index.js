@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import userRouter from './routers/user.routers.js';
+import projectRouter from './routers/project.routers.js';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 
@@ -21,6 +22,7 @@ const port = process.env.PORT || 8000;
 app.use(cors());
 app.use(express.json());
 app.use(userRouter);
+app.use(projectRouter);
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => {

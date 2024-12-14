@@ -11,7 +11,7 @@ const projectSchema = new mongoose.Schema({
         required: true
     },
     members: [{type: mongoose.Types.ObjectId, ref: 'user'}],
-    technologies: {
+    domains: {
         type: Array,
         default: []
     },
