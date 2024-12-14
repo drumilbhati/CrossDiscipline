@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import Chat from './components/Chat';
+import Chat from './pages/Chat';
 import './App.css';
 
 export default function App() {
