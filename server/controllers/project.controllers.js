@@ -1,6 +1,6 @@
 import Project from '../models/projects.models.js';
 import User from '../models/user.models.js';
-import jwt, { decode } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
