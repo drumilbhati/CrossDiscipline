@@ -17,7 +17,6 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     role: {
-        // role defines the user as a student or a faculty
         type: String,
         default: 'user'
     },

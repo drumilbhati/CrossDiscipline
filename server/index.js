@@ -3,21 +3,26 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import userRouter from './routers/user.routers.js';
+import projectRouter from './routers/project.routers.js';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
 
 dotenv.config();
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: 'http://localhost:5173',
+        methods: ['GET', 'POST']
+    }
+});
 
 const port = process.env.PORT || 8000;
 app.use(cors());
 app.use(express.json());
 app.use(userRouter);
+app.use(projectRouter);
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => {
@@ -28,17 +33,26 @@ mongoose.connect(process.env.MONGO_URI)
     process.exit(1);
 });
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, 'index.html'));
-});
-
 io.on('connection', (socket) => {
     console.log('A user connected', socket.id);
-    socket.on('chat message', (message) => {
-        io.emit('chat message', message);
+    
+    socket.on('join room', (room) => {
+        socket.rooms.forEach(r => {
+            if (r !== socket.id) socket.leave(r);
+        });
+        socket.join(room);
+        console.log(`User ${socket.id} joined room ${room}`);
     });
+    
+    socket.on('chat message', ( {room, message} ) => {
+        if (socket.rooms.has(room)) {
+            io.to(room).emit('chat message', {
+                message, 
+                sender: socket.id
+            });
+            console.log(`Message to ${room}: ${message}`);
+        }
+    })
 });
 
 server.listen(port, () => {
