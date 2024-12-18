@@ -6,23 +6,44 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 export const createProject = async (req, res) => {
     try {
-        const { title, description, owner, members, domains, contact, deadline, status, user } = req.body;
+        const { token, title, description, owner, members, domains, contact, deadline, status } = req.body;
+
+        const decodedToken = jwt.verify(token, JWT_SECRET);
+        const user = await User.findById(decodedToken.userId).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
 
         let project = await Project.findOne({ title });
         if (project) {
             return res.status(400).json({ error: 'Project already exists' });
+        
         }
+
+        const ownerUser = await User.findOne({ username: owner });
+        if (!ownerUser) {
+            return res.status(404).json({ error: 'Owner not found' });
+        }
+
+        const memberUsers = await User.find({ username: { $in: members } });
+        if (memberUsers.length !== members.length) {
+            return res.status(404).json({ error: 'One or more members not found' });
+        }
+
+        // Store owner and members as user objects
+        const ownerObject = ownerUser._id;
+        const memberObjects = memberUsers.map(user => user._id);
 
         project = new Project({
             title,
             description,
-            owner,
-            members,
+            owner: ownerObject,
+            members: memberObjects,
             domains,
             contact,
             deadline,
             status,
-            user
         });
 
         await project.save();

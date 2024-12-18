@@ -1,21 +1,52 @@
 import React, {useState} from "react";
 import { PlusIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { Modal, Box, Typography, Input } from '@mui/material';
+import axios from 'axios';
 import './AddProjectModal.css';
 
 const AddProjectModal = () => {
     const [open, setOpen] = useState(false);
-    const [projectName, setProjectName] = useState("");
+    const [title, setTitle] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
+    const [owner, setOwner] = useState("");
+    const [members, setMembers] = useState("");
+    const [domains, setDomains] = useState("");
+    const [contact, setContact] = useState("");
+    const [deadline, setDeadline] = useState(new Date());
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const API_URL = 'http://localhost:3001';
 
-        console.log("Project added: ", { projectName, projectDescription });
-        handleClose();
+    const handleSubmit = async(event) => {
+        event.preventDefault();
+
+        try {
+            const token = localStorage.getItem('token');
+            console.log('Attempting to create a new project...');
+            const response = await axios.post(`${API_URL}/api/create-project`, {
+                token,
+                title,
+                projectDescription,
+                owner,
+                members,
+                domains,
+                contact,
+                deadline
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+            console.log('Response: ', response);
+            if (response.status != 201) {
+                alert('Error creating project. Please retry');
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -49,13 +80,13 @@ const AddProjectModal = () => {
                         <form onSubmit={handleSubmit}>
                             <Input 
                                 type="text"
-                                id="projectName"
-                                value={projectName}
-                                onChange={(e) => {setProjectName(e.target.value)}}
+                                id="title"
+                                value={title}
+                                onChange={(e) => {setTitle(e.target.value)}}
                                 placeholder="Enter project name"
                                 required
                                 fullWidth
-                                margin="dense"
+                                margin="normal"
                             />
                             <Input
                                 type="text"
@@ -71,7 +102,57 @@ const AddProjectModal = () => {
                                     alignContent:"baseline"
                                 }}
                             />
-                            <button type="submit" className="submit-btn">Add Project</button>
+                            <Input 
+                                type="text"
+                                id="owner"
+                                value={owner}
+                                onChange={(e) => {setOwner(e.target.value)}}
+                                placeholder="Enter owner's name"
+                                required
+                                fullWidth
+                                margin="normal"
+                            />
+                            <Input 
+                                type="text"
+                                id="members"
+                                value={members}
+                                onChange={(e) => {setMembers(e.target.value)}}
+                                placeholder="Enter members' names"
+                                required
+                                fullWidth
+                                margin="normal"
+                            />
+                            <Input 
+                                type="text"
+                                id="domains"
+                                value={domains}
+                                onChange={(e) => {setDomains(e.target.value)}}
+                                placeholder="Enter domains you're working on"
+                                required
+                                fullWidth
+                                margin="normal"
+                            />
+                            <Input 
+                                type="text"
+                                id="contact"
+                                value={contact}
+                                onChange={(e) => {setContact(e.target.value)}}
+                                placeholder="Enter your contact details"
+                                required
+                                fullWidth
+                                margin="normal"
+                            />
+                            <Input 
+                                type="date"
+                                id="deadline"
+                                value={deadline}
+                                onChange={(e) => {setDeadline(e.target.value)}}
+                                placeholder="Enter project deadline"
+                                required
+                                fullWidth
+                                margin="normal"
+                            />
+                            <button type="submit" className="submit-btn" onClick={handleSubmit}>Add Project</button>
                         </form>
                     </Box>
                 </Modal>

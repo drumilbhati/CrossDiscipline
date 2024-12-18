@@ -30,10 +30,6 @@ const projectSchema = new mongoose.Schema({
     status: {
         type: String,
         default: 'Open'
-    },
-    user: {
-        type: mongoose.Types.ObjectId,
-        ref: 'user'
     }
 }, { timestamps: true });
 
