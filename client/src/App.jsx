@@ -1,11 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
-import Home from './pages/Home.jsx';
-import Chat from './pages/Chat';
-import AddProjectModal from './components/AddProjectModal/AddProjectModal';
-import './App.css';
-import LoginPage from './pages/LoginPage';
-import Signup from './pages/Signup';
-
+import Home from './pages/Home/Home';
+import LoginPage from './pages/Login/LoginPage.jsx';
+import Chat from './pages/Chat/Chat.jsx';
+import AddProjectModal from './components/AddProjectModal/AddProjectModal.jsx';
 
 export default function App() {
   return (
@@ -15,7 +12,6 @@ export default function App() {
         <Route path="/chat" element={<Chat />} />
         <Route path="/add-project" element={<AddProjectModal />}/>
         <Route path="/login" element={<LoginPage/>}></Route>
-        <Route path="/signup" element={<Signup/>}></Route>
       </Routes>
     </>
   );
