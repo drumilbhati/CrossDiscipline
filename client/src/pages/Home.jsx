@@ -12,8 +12,7 @@ const Home = () => {
        
         <div>
         <h1 className='title'>Home</h1>
-        
-        <button className='login' onClick={handleClick}>Login</button>
+        <button className="login" onClick={handleClick}>Login</button>
         </div>
     );
 };
