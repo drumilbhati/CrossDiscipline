@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import '../../App.css';
 
 const LoginPage=()=>{
-  const navigate=useNavigate();
+    const navigate=useNavigate();
     const [email, setEmail]=useState('');
     const [password, setPassword]=useState('');
     const [error, setError]=useState('');
@@ -27,39 +27,39 @@ const LoginPage=()=>{
     }
     return(
       /* From Uiverse.io by akshat-patel28 */ 
- <div class="form-container">
- <p class="title">Sign in to your account</p>
- <form class="form" onSubmit={handleSubmit}>
-   <input type="email" class="input" placeholder="Email" value={email} onChange={(e)=>setEmail(e.target.value)} />
-   <input type="password" class="input" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
+ <div className="form-container">
+ <p className="title">Sign in to your account</p>
+ <form className="form" onSubmit={handleSubmit}>
+   <input type="email" className="input" placeholder="Email" value={email} onChange={(e)=>setEmail(e.target.value)} />
+   <input type="password" className="input" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
    {/* Error Message */}
 {error && (
-  <div className="error-message">
+  <div classNameName="error-message">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      className="error-icon"
+      strokeWidth="1"
+      classNameName="error-icon"
     >
-      {/* <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-3-3v6m12-6a9 9 0 11-18 0 9 9 0 0118 0z" /> */}
     </svg>
     <span>{error}</span>
   </div>
 )}
 
-   <p class="page-link">
-     <span class="page-link-label">Forgot Password?</span>
+   <p className="page-link">
+     <span className="page-link-label">Forgot Password?</span>
    </p>
-   <button class="form-btn">Log in</button>
+   <button className="form-btn">Log in</button>
  </form>
- <p class="sign-up-label">
-   Don't have an account?<span class="sign-up-link" onClick={handleSign}>Sign up</span>
+ <p className="sign-up-label">
+   Don't have an account?<span className="sign-up-link" onClick={handleSign}>Sign up</span>
  </p>
- <div class="buttons-container">
+ <div className="buttons-container">
    
-   <div class="google-login-button">
-     <svg stroke="currentColor" fill="currentColor" stroke-width="0" version="1.1" x="0px" y="0px" class="google-icon" viewBox="0 0 48 48" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+   <div className="google-login-button">
+     <svg stroke="currentColor" fill="currentColor" stroke-width="0" version="1.1" x="0px" y="0px" className="google-icon" viewBox="0 0 48 48" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12
 c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24
 c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>

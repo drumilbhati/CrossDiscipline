@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import { PlusIcon, XMarkIcon } from '@heroicons/react/24/solid';
-import { Modal, Box, Typography, Input } from '@mui/material';
+import { Modal, Box, Typography, Input, Alert } from '@mui/material';
 import axios from 'axios';
+import '../../index.css';
 import './AddProjectModal.css';
 
 const AddProjectModal = () => {
@@ -13,6 +14,8 @@ const AddProjectModal = () => {
     const [domains, setDomains] = useState("");
     const [contact, setContact] = useState("");
     const [deadline, setDeadline] = useState(new Date());
+    const [response, setResponse] = useState("");
+    const [alertType, setAlertType] = useState('success');
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -40,11 +43,17 @@ const AddProjectModal = () => {
                 },
             }
         );
-            console.log('Response: ', response);
-            if (response.status != 201) {
-                alert('Error creating project. Please retry');
+            if (response.ok) {
+                setAlertType('success');
+                setResponse(response.message);
+                setTimeout(() => setResponse(null), 3000);
+            } else {
+                setAlertType('error');
+                setResponse('Failed to create project');
             }
         } catch (error) {
+            setAlertType('error');
+            setResponse('Server error');
             console.error(error);
         }
     }
@@ -154,6 +163,11 @@ const AddProjectModal = () => {
                             />
                             <button type="submit" className="submit-btn" onClick={handleSubmit}>Add Project</button>
                         </form>
+                        {response && (
+                            <Alert severity={alertType} sx={{mt: 2}}>
+                                {response}
+                            </Alert>
+                        )}
                     </Box>
                 </Modal>
             )}
