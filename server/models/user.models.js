@@ -20,10 +20,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'user'
     },
-    avatar: {
-        type: String,
-        default: 'https://res.cloudinary.com/dxkufsejm/image/upload/v1627481523/avatar/avatar_cugq40.png'
-    },
     age: {
         type: Number,
         default: 0
