@@ -8,6 +8,8 @@ import { Server } from 'socket.io';
 import { createServer } from 'http';
 
 dotenv.config();
+console.log("Loaded JWT_SECRET:", process.env.JWT_SECRET);
+
 
 const app = express();
 const server = createServer(app);

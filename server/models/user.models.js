@@ -4,21 +4,26 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique: true,
     },
     email: {
         type: String,
         required: true,
         unique: true,
-        trim: true
+        trim: true,
+        lowercase: true,
+        match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        minlength: [6, 'Password must be atleast 6 characters']
     },
     role: {
         type: String,
-        default: 'user'
+        enum: ['student', 'instructor', 'admin', 'user'],
+        default: 'student'
     },
     age: {
         type: Number,
@@ -36,8 +41,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
-    followers: [{ type: mongoose.Types.ObjectId, ref: 'user' }],
-    following: [{ type: mongoose.Types.ObjectId, ref: 'user' }],
     skills: {
         type: Array,
         default: []
