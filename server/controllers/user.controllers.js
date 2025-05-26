@@ -35,13 +35,12 @@ export const createUser = async (req, res) => {
 export const findUser = async (req, res) => {
     try {
         const {email, password} = req.body;
-        let user = User.findOne({ email });
+        let user = await User.findOne({ email });
 
         if (user) {
-            const salt = bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(password, salt);
+            const isCorrect = bcrypt.compare(password, user.password);
             
-            if (hashedPassword == user.password) {
+            if (isCorrect) {
                 res.status(200).json(user);
             } else {
                 res.status(403).json({ message: 'Incorrect password' });
@@ -51,6 +50,20 @@ export const findUser = async (req, res) => {
         }
     } catch (error) {
         console.error("Error finding error", error);
-        res.status(500).json({ error: 'Server error '});
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+export const findAllUsers = async (req, res) => {
+    try {
+        const users = await User.find();
+        if (users) {
+            res.status(200).json(users);
+        } else {
+            res.status(404).message({ message: 'Not found' });
+        }
+    } catch (error) {
+        console.log('Error getting users', error);
+        res.status(500).json({ error: 'Server error' });   
     }
 }
