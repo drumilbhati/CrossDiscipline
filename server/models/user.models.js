@@ -46,7 +46,9 @@ const userSchema = new mongoose.Schema({
         default: []
     },
     projects: [{ type: mongoose.Types.ObjectId, ref: 'project' }],
-
+    resume: {
+        type: mongoose.Types.ObjectId, ref: 'file',
+    }
 }, { timestamps: true });
 
 const User = mongoose.model('user', userSchema);
