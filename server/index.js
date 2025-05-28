@@ -9,6 +9,7 @@ import { createServer } from 'http';
 import fileRouter from './routers/file.router.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import messageRouter from './routers/message.router.js';
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ app.use(express.json());
 app.use(userRouter);
 app.use(projectRouter);
 app.use(fileRouter);
+app.use(messageRouter);
 app.use(express.static(__dirname));
 
 mongoose.connect(process.env.MONGO_URI)
@@ -45,26 +47,36 @@ mongoose.connect(process.env.MONGO_URI)
     process.exit(1);
 });
 
+// io.on('connection', (socket) => {
+//     console.log('A user connected', socket.id);
+    
+//     socket.on('join room', (room) => {
+//         socket.rooms.forEach(r => {
+//             if (r !== socket.id) socket.leave(r);
+//         });
+//         socket.join(room);
+//         console.log(`User ${socket.id} joined room ${room}`);
+//     });
+    
+//     socket.on('chat message', ( {room, message} ) => {
+//         if (socket.rooms.has(room)) {
+//             io.to(room).emit('chat message', {
+//                 message, 
+//                 sender: socket.id
+//             });
+//             console.log(`Message to ${room}: ${message}`);
+//         }
+//     })
+// });
+
 io.on('connection', (socket) => {
-    console.log('A user connected', socket.id);
-    
-    socket.on('join room', (room) => {
-        socket.rooms.forEach(r => {
-            if (r !== socket.id) socket.leave(r);
-        });
-        socket.join(room);
-        console.log(`User ${socket.id} joined room ${room}`);
+    socket.on('join room', (roomId) => {
+        socket.join(roomId);
     });
-    
-    socket.on('chat message', ( {room, message} ) => {
-        if (socket.rooms.has(room)) {
-            io.to(room).emit('chat message', {
-                message, 
-                sender: socket.id
-            });
-            console.log(`Message to ${room}: ${message}`);
-        }
-    })
+
+    socket.on('chat message', ({ room, message }) => {
+        socket.to(room).emit('chat message', message);
+    });
 });
 
 server.listen(port, () => {
