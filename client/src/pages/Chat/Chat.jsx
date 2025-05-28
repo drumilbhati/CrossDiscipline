@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import '../../App.css';
+import axios, { AxiosHeaders } from "axios";
 
 const socket = io("http://localhost:3001");
 
@@ -20,23 +21,40 @@ const Chat = () => {
         };
     }, []);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (input && currentRoom) {
             socket.emit('chat message', {
                 room: currentRoom,
-                message: input
+                message: input,
+                sender: socket.id
+            });
+            await axios.post('/api/sendMessage', {
+                sender: socket.id,
+                content: input,
+                chatRoomId: currentRoom   
             });
             setInput("");
         }
     };
 
-    const joinRoom = () => {
+    const joinRoom = async () => {
         if (room) {
             socket.emit('join room', room);
             setCurrentRoom(room);
             setMessages([]);
             setRoom("");
+
+            const res = await axios.get(`/api/messages/${room}`);
+            const history = res.data;
+            if (Array.isArray(history)) {
+                setMessages(history.map(msg => ({
+                    message: msg.content,
+                    sender: msg.sender
+                })));
+            } else {
+                setMessages([]);
+            }    
         }
     }
 
