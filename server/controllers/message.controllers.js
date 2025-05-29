@@ -1,3 +1,4 @@
+import ChatRoom from "../models/chat_room.models.js";
 import Message from "../models/message.models.js";
 
 export const sendMessage = async (req, res) => {
@@ -9,6 +10,10 @@ export const sendMessage = async (req, res) => {
             chatRoom: chatRoomId
         });
         await message.save();
+        
+        const chatRoom = await ChatRoom.findById(chatRoomId);
+        chatRoom.messages.push(message._id);
+        await chatRoom.save();
         res.status(201).json({ message: "Message sent successfully", message });
     } catch (error) {
         console.log(error);

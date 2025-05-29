@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import '../../App.css';
-import axios, { AxiosHeaders } from "axios";
+import axios from "axios";
 
 const socket = io("http://localhost:3001");
 
@@ -10,6 +10,7 @@ const Chat = () => {
     const [input, setInput] = useState("");
     const [room, setRoom] = useState("");
     const [currentRoom, setCurrentRoom] = useState("");
+    const [roomId, setRoomId] = useState("");
 
     useEffect(() => {
         socket.on('chat message', ({ message, sender }) => {
@@ -29,10 +30,9 @@ const Chat = () => {
                 message: input,
                 sender: socket.id
             });
-            await axios.post('/api/sendMessage', {
-                sender: socket.id,
+            await axios.post('http://localhost:3001/api/sendMessage', {
                 content: input,
-                chatRoomId: currentRoom   
+                chatRoomId: roomId
             });
             setInput("");
         }
@@ -40,13 +40,16 @@ const Chat = () => {
 
     const joinRoom = async () => {
         if (room) {
-            socket.emit('join room', room);
-            setCurrentRoom(room);
+            const res = await axios.post('http://localhost:3001/api/chatRoom', { name: room });
+            const chatRoomId = res.data._id;
+            setRoomId(chatRoomId);
+            socket.emit('join room', chatRoomId);
+            setCurrentRoom(chatRoomId);
             setMessages([]);
             setRoom("");
 
-            const res = await axios.get(`/api/messages/${room}`);
-            const history = res.data;
+            const historyRes = await axios.get(`http://localhost:3001/api/messages/${chatRoomId}`);
+            const history = historyRes.data;
             if (Array.isArray(history)) {
                 setMessages(history.map(msg => ({
                     message: msg.content,
