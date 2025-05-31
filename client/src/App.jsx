@@ -8,14 +8,12 @@ import { AuthProvider } from './auth/AuthContext.jsx';
 export default function App() {
   return (
     <>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/add-project" element={<AddProjectModal />}/>
-          <Route path="/login" element={<LoginPage/>}></Route>
-        </Routes>
-      </AuthProvider>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/add-project" element={<AddProjectModal />}/>
+        <Route path="/login" element={<LoginPage/>}></Route>
+      </Routes>
     </>
   );
 };  
