@@ -1,12 +1,12 @@
 import React from 'react';
-import { useState } from 'react';
+import {useState} from 'react';
 import '../App.css';
-import { Navigate, useNavigate } from 'react-router-dom';
+import {Navigate, useNavigate} from 'react-router-dom';
 
-const Signup=()=>{
+const Signup = () => {
     return (
         <div>
-            
+
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import mongoose, { model } from "mongoose";
+import mongoose, {model} from "mongoose";
 
 const fileSchema = new mongoose.Schema({
     name: String,

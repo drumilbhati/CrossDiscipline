@@ -31,7 +31,7 @@ const projectSchema = new mongoose.Schema({
         type: String,
         default: 'Open'
     }
-}, { timestamps: true });
+}, {timestamps: true});
 
 const Project = mongoose.model('project', projectSchema);
 

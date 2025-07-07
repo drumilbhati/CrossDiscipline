@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import React, {useEffect, useState} from "react";
+import {io} from "socket.io-client";
 import '../../App.css';
 import axios from "axios";
 
@@ -13,8 +13,8 @@ const Chat = () => {
     const [roomId, setRoomId] = useState("");
 
     useEffect(() => {
-        socket.on('chat message', ({ message, sender }) => {
-            setMessages((prevMessages) => [...prevMessages, { message, sender }]);
+        socket.on('chat message', ({message, sender}) => {
+            setMessages((prevMessages) => [...prevMessages, {message, sender}]);
         });
 
         return () => {
@@ -40,7 +40,7 @@ const Chat = () => {
 
     const joinRoom = async () => {
         if (room) {
-            const res = await axios.post('http://localhost:3001/api/chatRoom', { name: room });
+            const res = await axios.post('http://localhost:3001/api/chatRoom', {name: room});
             const chatRoomId = res.data._id;
             setRoomId(chatRoomId);
             socket.emit('join room', chatRoomId);
@@ -57,7 +57,7 @@ const Chat = () => {
                 })));
             } else {
                 setMessages([]);
-            }    
+            }
         }
     }
 
@@ -65,7 +65,7 @@ const Chat = () => {
         <div id="chat-container">
             <div>
                 <input
-                    value = {room}
+                    value={room}
                     onChange={(e) => setRoom(e.target.value)}
                     placeholder="Enter room"
                 />
@@ -74,20 +74,22 @@ const Chat = () => {
             </div>
             <ul id="messages">
                 {messages.map((msg, index) => (
-                    <li key={index} className={msg.sender === socket.id ? 'sent': 'received'}>
+                    <li key={index} className={msg.sender === socket.id ? 'sent' : 'received'}>
                         {msg.message}
                     </li>
                 ))}
             </ul>
             <form onSubmit={handleSubmit}>
-            <input
-                value={input}
-                onChange={(e) => {setInput(e.target.value)}}
-                autoComplete="off"
-                placeholder="Enter your message"
-                disabled={!currentRoom}
-            />
-            <button type="submit">Send</button>
+                <input
+                    value={input}
+                    onChange={(e) => {
+                        setInput(e.target.value)
+                    }}
+                    autoComplete="off"
+                    placeholder="Enter your message"
+                    disabled={!currentRoom}
+                />
+                <button type="submit">Send</button>
             </form>
         </div>
     );

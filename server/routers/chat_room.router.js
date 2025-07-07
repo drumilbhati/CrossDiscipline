@@ -1,5 +1,5 @@
 import express from 'express';
-import { createOrFindChatRoom } from '../controllers/chat_room.controllers.js';
+import {createOrFindChatRoom} from '../controllers/chat_room.controllers.js';
 
 const chatRoomRouter = express.Router();
 

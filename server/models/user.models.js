@@ -45,11 +45,11 @@ const userSchema = new mongoose.Schema({
         type: Array,
         default: []
     },
-    projects: [{ type: mongoose.Types.ObjectId, ref: 'project' }],
+    projects: [{type: mongoose.Types.ObjectId, ref: 'project'}],
     resume: {
         type: mongoose.Types.ObjectId, ref: 'file',
     }
-}, { timestamps: true });
+}, {timestamps: true});
 
 const User = mongoose.model('user', userSchema);
 export default User;

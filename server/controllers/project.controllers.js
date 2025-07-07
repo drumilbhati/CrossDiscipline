@@ -6,29 +6,29 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 export const createProject = async (req, res) => {
     try {
-        const { token, title, description, owner, members, domains, contact, deadline, status } = req.body;
+        const {token, title, description, owner, members, domains, contact, deadline, status} = req.body;
 
         const decodedToken = jwt.verify(token, JWT_SECRET);
         const user = await User.findById(decodedToken.userId).select('-password');
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({message: 'User not found'});
         }
 
-        let project = await Project.findOne({ title });
+        let project = await Project.findOne({title});
         if (project) {
-            return res.status(400).json({ error: 'Project already exists' });
-        
+            return res.status(400).json({error: 'Project already exists'});
+
         }
 
-        const ownerUser = await User.findOne({ username: owner });
+        const ownerUser = await User.findOne({username: owner});
         if (!ownerUser) {
-            return res.status(404).json({ error: 'Owner not found' });
+            return res.status(404).json({error: 'Owner not found'});
         }
 
-        const memberUsers = await User.find({ username: { $in: members } });
+        const memberUsers = await User.find({username: {$in: members}});
         if (memberUsers.length !== members.length) {
-            return res.status(404).json({ error: 'One or more members not found' });
+            return res.status(404).json({error: 'One or more members not found'});
         }
 
         // Store owner and members as user objects
@@ -48,11 +48,11 @@ export const createProject = async (req, res) => {
 
         await project.save();
 
-        res.status(201).json({ message: 'Project created successfully' });
+        res.status(201).json({message: 'Project created successfully'});
     } catch (error) {
         console.error("Project creation error", error);
-        res.status(500).json({ error: 'Server error' });
-    } 
+        res.status(500).json({error: 'Server error'});
+    }
 };
 
 export const getProjects = async (req, res) => {
@@ -61,22 +61,22 @@ export const getProjects = async (req, res) => {
         res.status(200).json(projects);
     } catch (error) {
         console.error("Error getting projects", error);
-        res.status(500).json({ error: 'Server error' });
-        
+        res.status(500).json({error: 'Server error'});
+
     }
 };
 
-export const joinProject = async(req, res) => {
-    const { token, project_title } = req.body;
+export const joinProject = async (req, res) => {
+    const {token, project_title} = req.body;
     const decodedToken = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(decodedToken.userId).select('-password');
-    const project = await Project.findOne({ title: project_title });
+    const project = await Project.findOne({title: project_title});
 
     if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({message: 'User not found'});
     }
     if (!project) {
-        return res.status(404).json({ message: 'Project not found' });
+        return res.status(404).json({message: 'Project not found'});
     }
     if (project.status !== 'Open') {
         return res.status(400).json({
@@ -99,27 +99,27 @@ export const joinProject = async(req, res) => {
     });
 };
 
-export const deleteProject = async(req, res) => {
+export const deleteProject = async (req, res) => {
     try {
-        const { token, projectId } = req.body;
+        const {token, projectId} = req.body;
         const decodedToken = jwt.verify(token, JWT_SECRET);
         const user = await User.findById(decodedToken.userId).select('-password');
         const project = await Project.findById(projectId);
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({message: 'User not found'});
         }
         if (!project) {
-            return res.status(404).json({ message: 'Project not found' });
+            return res.status(404).json({message: 'Project not found'});
         }
         if (project.owner !== user) {
-            return res.status(401).json({ message: 'Unauthorized' });
+            return res.status(401).json({message: 'Unauthorized'});
         }
 
-        await Project.deleteOne({ _id: projectId });
-        res.status(200).json({ message: 'Project deleted successfully' });
-        
+        await Project.deleteOne({_id: projectId});
+        res.status(200).json({message: 'Project deleted successfully'});
+
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({message: error.message});
     }
 };

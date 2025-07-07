@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { PlusIcon, XMarkIcon } from '@heroicons/react/24/solid';
-import { Modal, Box, Typography, Input, Alert } from '@mui/material';
+import React, {useState} from "react";
+import {PlusIcon, XMarkIcon} from '@heroicons/react/24/solid';
+import {Modal, Box, Typography, Input, Alert} from '@mui/material';
 import axios from 'axios';
 import '../../index.css';
 
@@ -12,7 +12,7 @@ const AddFileModal = () => {
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    
+
     const API_URL = 'http://localhost:3001';
 
     const handleSubmit = async (event) => {
@@ -28,7 +28,7 @@ const AddFileModal = () => {
 
         try {
             const res = await axios.post(`${API_URL}/api/files/uploadFile`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
+                headers: {'Content-Type': 'multipart/form-data'},
             });
 
             if (res.status === 201) {
@@ -61,11 +61,11 @@ const AddFileModal = () => {
                         <div className="modal-header">
                             <Typography variant="h6" fontWeight={600}>Upload a File</Typography>
                             <button className="modal-close-btn" onClick={handleClose}>
-                                <XMarkIcon className="icon" style={{ color: "black" }} />
+                                <XMarkIcon className="icon" style={{color: "black"}}/>
                             </button>
                         </div>
                         <form onSubmit={handleSubmit}>
-                            <Input 
+                            <Input
                                 type="file"
                                 onChange={(e) => setFile(e.target.files[0])}
                                 fullWidth
@@ -74,7 +74,7 @@ const AddFileModal = () => {
                             <button type="submit" className="submit-btn">Upload File</button>
                         </form>
                         {response && (
-                            <Alert severity={alertType} sx={{ mt: 2 }}>
+                            <Alert severity={alertType} sx={{mt: 2}}>
                                 {response}
                             </Alert>
                         )}
